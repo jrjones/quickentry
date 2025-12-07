@@ -28,5 +28,10 @@ struct ObsidianCommand: ParsableCommand {
         )
 
         print(obsidianURL)
+
+        let inboxCount = ObsidianService.countInboxItems(config: config)
+        if inboxCount > 0 {
+            print("(\(inboxCount) item\(inboxCount == 1 ? "" : "s") in inbox)")
+        }
     }
 }

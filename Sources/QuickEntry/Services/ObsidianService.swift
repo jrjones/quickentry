@@ -27,6 +27,18 @@ enum ObsidianService {
     /// Pattern for QuickEntry-created files: yyyy-MM-dd-HHmmss.md
     private static let quickEntryPattern = #"^\d{4}-\d{2}-\d{2}-\d{6}\.md$"#
 
+    /// Count QuickEntry files in inbox
+    static func countInboxItems(config: Config) -> Int {
+        let vaultPath = (config.obsidian.vaultPath as NSString).expandingTildeInPath
+        let inboxPath = (vaultPath as NSString).appendingPathComponent(config.obsidian.inboxFolder)
+
+        guard let contents = try? FileManager.default.contentsOfDirectory(atPath: inboxPath) else {
+            return 0
+        }
+
+        return contents.filter { $0.range(of: quickEntryPattern, options: .regularExpression) != nil }.count
+    }
+
     /// Extract time from filename (yyyy-MM-dd-HHmmss.md) and format as "5:29pm"
     private static func formatTimeFromFilename(_ filename: String) -> String {
         // Extract HHmmss from filename like "2025-12-07-172933.md"
